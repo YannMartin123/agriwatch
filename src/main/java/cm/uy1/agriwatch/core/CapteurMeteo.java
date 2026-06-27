@@ -1,4 +1,4 @@
-﻿package cm.uy1.agriwatch.core;
+package cm.uy1.agriwatch.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CapteurMeteo implements Runnable {
                 Thread.sleep(2000 + (long)(Math.random() * 1000));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.out.println("Capteur " + zone + " arrÃªtÃ© proprement.");
+                System.out.println("Capteur " + zone + " arrêté proprement.");
             }
         }
     }
