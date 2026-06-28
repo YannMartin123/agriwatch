@@ -1,11 +1,21 @@
-﻿package cm.uy1.agriwatch.ui;
+package cm.uy1.agriwatch.ui;
+
+import cm.uy1.agriwatch.core.MesureMeteo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
-// TODO Ã‰quipe 3 â€” Coloration rouge si humiditÃ© < 30%
+/**
+ * Colorie la ligne entière en rouge si l'humidité de la zone est < 30%.
+ * Respecte la règle du else : réinitialise la couleur de fond quand l'humidité
+ * repasse au-dessus du seuil.
+ */
 public class MeteoTableCellRenderer extends DefaultTableCellRenderer {
+
+    private static final double SEUIL_ALERTE = 30.0;
+    private static final Color FOND_ALERTE   = new Color(255, 80, 80);  // rouge vif
 
     @Override
     public Component getTableCellRendererComponent(
@@ -15,9 +25,17 @@ public class MeteoTableCellRenderer extends DefaultTableCellRenderer {
         Component c = super.getTableCellRendererComponent(
                 table, value, isSelected, hasFocus, row, column);
 
-        // TODO : rÃ©cupÃ©rer l'humiditÃ© de la ligne et appliquer Color.RED si < 30
-        // else { setBackground(UIManager.getColor("Table.background")); }
-
+        TableModel model = table.getModel();
+        if (model instanceof MeteoTableModel meteoModel) {
+            MesureMeteo mesure = meteoModel.getMesure(row);
+            if (mesure != null && mesure.getHumidite() < SEUIL_ALERTE) {
+                c.setBackground(FOND_ALERTE);
+                c.setForeground(Color.WHITE);
+            } else {
+                c.setBackground(UIManager.getColor("Table.background"));
+                c.setForeground(UIManager.getColor("Table.foreground"));
+            }
+        }
         return c;
     }
 }

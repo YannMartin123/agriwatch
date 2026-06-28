@@ -1,4 +1,4 @@
-﻿package cm.uy1.agriwatch.core;
+package cm.uy1.agriwatch.core;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,6 +25,6 @@ public class MesureMeteo implements Serializable {
 
     @Override
     public String toString() {
-        return zone + " | Temp: " + temperature + "Â°C | HumiditÃ©: " + humidite + "%";
+        return zone + " | Temp: " + temperature + "°C | Humidité: " + humidite + "%";
     }
 }

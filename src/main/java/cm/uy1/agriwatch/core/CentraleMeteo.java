@@ -1,4 +1,4 @@
-﻿package cm.uy1.agriwatch.core;
+package cm.uy1.agriwatch.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
