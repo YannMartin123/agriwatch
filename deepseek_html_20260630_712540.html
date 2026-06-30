@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriWatch · contrôle capteurs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 32px 40px;
+            color: #1a1e2b;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --radius-md: 12px;
+            --radius-xl: 20px;
+            --radius-full: 999px;
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --color-primary: #1e2b3c;
+            --color-accent: #2d7a6e;
+            --color-accent-light: #e9f3f0;
+            --color-text: #1a1e2b;
+            --color-text-secondary: #5b677b;
+            --color-border: #e9edf2;
+            --color-bg-card: #ffffff;
+            --color-badge-warning: #fde9e1;
+            --color-badge-warning-text: #b34a2c;
+            --color-badge-normal: #e6f3ed;
+            --color-badge-normal-text: #1d6b5c;
+            --transition: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .dashboard {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-8);
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--color-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        .logo-text {
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.3px;
+            color: var(--color-primary);
+        }
+        .logo-text span {
+            font-weight: 400;
+            color: var(--color-text-secondary);
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        .header-badge {
+            background: var(--color-accent-light);
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--color-accent);
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-badge i {
+            font-size: 12px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #d0d8e3;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d3a4e;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: default;
+            transition: var(--transition);
+        }
+        .avatar:hover {
+            background: #c5cedb;
+            transform: scale(1.02);
+        }
+
+        /* ===== CARTES ===== */
+        .card {
+            background: var(--color-bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-card);
+            padding: var(--space-6);
+            transition: box-shadow var(--transition), transform 0.15s ease;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-5);
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.2px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+        }
+        .card-title i {
+            margin-right: 8px;
+            font-size: 13px;
+            color: #8d99ae;
+        }
+        .badge-soft {
+            background: #f0f3f8;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+            cursor: default;
+        }
+        .badge-soft:hover {
+            background: #e6ebf2;
+        }
+
+        /* ===== LIGNES ZONE ===== */
+        .zone-row {
+            display: grid;
+            grid-template-columns: 1fr 0.7fr 0.9fr 1fr 0.5fr 0.6fr;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 14px;
+            transition: background 0.15s ease, padding 0.15s ease;
+            border-radius: 8px;
+        }
+        .zone-row:last-child {
+            border-bottom: none;
+        }
+        .zone-row:hover {
+            background: #fafcff;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+        .zone-name {
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+        .zone-temp {
+            font-weight: 500;
+        }
+        .zone-humidity {
+            color: var(--color-text-secondary);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 12px 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            width: fit-content;
+            transition: var(--transition);
+        }
+        .badge-alert {
+            background: var(--color-badge-warning);
+            color: var(--color-badge-warning-text);
+        }
+        .badge-normal {
+            background: var(--color-badge-normal);
+            color: var(--color-badge-normal-text);
+        }
+        .badge-status i {
+            font-size: 10px;
+        }
+        .zone-preview {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--color-text-secondary);
+            font-size: 13px;
+        }
+        .zone-preview i {
+            font-size: 14px;
+            color: #8d99ae;
+        }
+
+        /* ===== BOUTONS CAPTEUR ===== */
+        .sensor-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-sensor {
+            background: transparent;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--color-text-secondary);
+            background: #f0f3f8;
+        }
+        .btn-sensor:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        .btn-sensor.start {
+            color: #2d7a6e;
+        }
+        .btn-sensor.start:hover {
+            background: #d4ebe5;
+        }
+        .btn-sensor.stop {
+            color: #b34a2c;
+        }
+        .btn-sensor.stop:hover {
+            background: #fde9e1;
+        }
+        .btn-sensor:active {
+            transform: scale(0.92);
+        }
+        .btn-sensor .fa-spinner {
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .sensor-status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #b0bcca;
+            transition: var(--transition);
+            margin-right: 2px;
+        }
+        .sensor-status-dot.online {
+            background: #2d7a6e;
+            box-shadow: 0 0 0 2px rgba(45, 122, 110, 0.15);
+        }
+        .sensor-status-dot.offline {
+            background: #b34a2c;
+            box-shadow: 0 0 0 2px rgba(179, 74, 44, 0.12);
+        }
+        .sensor-status-dot.pending {
+            background: #e6a23c;
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.85);
+            }
+        }
+
+        /* ===== GRILLES ===== */
+        .grid-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        @media (max-width: 900px) {
+            .grid-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .row-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        @media (max-width: 700px) {
+            .row-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .double-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+        }
+        @media (max-width: 800px) {
+            .double-table {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== OFFLINE + SETTINGS ===== */
+        .offline-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+        .offline-item {
+            background: #f9fafc;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            border: 1px solid #f0f2f6;
+            transition: var(--transition);
+            cursor: default;
+        }
+        .offline-item:hover {
+            background: #f2f5fa;
+            border-color: #dce3ec;
+        }
+        .offline-item i {
+            color: #b0bcca;
+            font-size: 15px;
+            width: 18px;
+        }
+        .offline-item span {
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+        .offline-item small {
+            color: #b0bcca;
+            font-size: 12px;
+            margin-left: auto;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4) var(--space-6);
+        }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f3f8;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .setting-item:hover {
+            background: #fafcff;
+            margin: 0 -4px;
+            padding-left: 4px;
+            padding-right: 4px;
+            border-radius: 6px;
+        }
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        .setting-label {
+            color: var(--color-text-secondary);
+            font-weight: 450;
+        }
+        .setting-value {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toggle-indicator {
+            width: 32px;
+            height: 18px;
+            background: var(--color-accent);
+            border-radius: 30px;
+            position: relative;
+            display: inline-block;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .toggle-indicator::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
+        }
+        .toggle-indicator.active {
+            background: var(--color-accent);
+        }
+        .toggle-indicator.active::after {
+            left: 16px;
+        }
+        .toggle-indicator.inactive {
+            background: #b0bcca;
+        }
+        .toggle-indicator.inactive::after {
+            left: 2px;
+        }
+
+        .cours-badge {
+            margin-top: var(--space-6);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            letter-spacing: 0.2px;
+        }
+        .cours-badge i {
+            margin-right: 6px;
+        }
+
+        /* ===== INTERACTIONS SUPP ===== */
+        .hover-lift {
+            transition: transform 0.15s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-weight: 500;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            transition: var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-ghost:hover {
+            background: #f0f3f8;
+            color: var(--color-primary);
+        }
+        .btn-ghost:active {
+            transform: scale(0.96);
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--color-primary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast-message.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast-message i {
+            margin-right: 10px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 16px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .offline-grid {
+                grid-template-columns: 1fr;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .zone-row {
+                grid-template-columns: 1fr 0.5fr 0.6fr 0.8fr 0.4fr 0.6fr;
+                font-size: 12px;
+                gap: 2px;
+            }
+            .btn-sensor {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+                <div class="logo-text">AgriWatch <span>· contrôle</span></div>
+            </div>
+            <div class="header-actions">
+                <span class="header-badge"><i class="fas fa-circle" style="font-size: 8px; color: #2d7a6e;"></i> 5 capteurs</span>
+                <div class="avatar">JD</div>
+            </div>
+        </header>
+
+        <!-- ===== APERÇU INSTANTANÉ AVEC COMMANDES ===== -->
+        <div class="grid-overview">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-chart-simple"></i> Aperçu instantané</span>
+                    <span class="badge-soft"><i class="far fa-clock"></i> 2s</span>
+                </div>
+                <div>
+                    <div class="zone-row" style="font-weight: 500; color: var(--color-text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--color-border);">
+                        <span>Zone</span><span>Temp</span><span>Humidité</span><span>Alerte</span><span>État</span><span>Contrôle</span>
+                    </div>
+
+                    <!-- ZONE A -->
+                    <div class="zone-row" data-zone="A">
+                        <span class="zone-name">ZONE A</span>
+                        <span class="zone-temp">33.0°</span>
+                        <span class="zone-humidity">18.8%</span>
+                        <span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span>
+                        <span><span class="sensor-status-dot online" id="dot-A"></span></span>
+                        <div class="sensor-control">
+                            <button class="btn-sensor start" data-zone="A" data-action="start" title="Démarrer"><i class="fas fa-play"></i></button>
+                            <button class="btn-sensor stop" data-zone="A" data-action="stop" title="Arrêter"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ZONE B -->
+                    <div class="zone-row" data-zone="B">
+                        <span class="zone-name">ZONE B</span>
+                        <span class="zone-temp">16.8°</span>
+                        <span class="zone-humidity">72.0%</span>
+                        <span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span>
+                        <span><span class="sensor-status-dot online" id="dot-B"></span></span>
+                        <div class="sensor-control">
+                            <button class="btn-sensor start" data-zone="B" data-action="start"><i class="fas fa-play"></i></button>
+                            <button class="btn-sensor stop" data-zone="B" data-action="stop"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ZONE C -->
+                    <div class="zone-row" data-zone="C">
+                        <span class="zone-name">ZONE C</span>
+                        <span class="zone-temp">21.8°</span>
+                        <span class="zone-humidity">73.8%</span>
+                        <span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span>
+                        <span><span class="sensor-status-dot online" id="dot-C"></span></span>
+                        <div class="sensor-control">
+                            <button class="btn-sensor start" data-zone="C" data-action="start"><i class="fas fa-play"></i></button>
+                            <button class="btn-sensor stop" data-zone="C" data-action="stop"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ZONE D -->
+                    <div class="zone-row" data-zone="D">
+                        <span class="zone-name">ZONE D</span>
+                        <span class="zone-temp">24.2°</span>
+                        <span class="zone-humidity">24.7%</span>
+                        <span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span>
+                        <span><span class="sensor-status-dot offline" id="dot-D"></span></span>
+                        <div class="sensor-control">
+                            <button class="btn-sensor start" data-zone="D" data-action="start"><i class="fas fa-play"></i></button>
+                            <button class="btn-sensor stop" data-zone="D" data-action="stop"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- ZONE E -->
+                    <div class="zone-row" data-zone="E">
+                        <span class="zone-name">ZONE E</span>
+                        <span class="zone-temp">27.2°</span>
+                        <span class="zone-humidity">35.4%</span>
+                        <span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span>
+                        <span><span class="sensor-status-dot online" id="dot-E"></span></span>
+                        <div class="sensor-control">
+                            <button class="btn-sensor start" data-zone="E" data-action="start"><i class="fas fa-play"></i></button>
+                            <button class="btn-sensor stop" data-zone="E" data-action="stop"><i class="fas fa-stop"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: var(--space-4); display: flex; gap: var(--space-2); justify-content: flex-end;">
+                    <button class="btn-ghost" id="startAllBtn"><i class="fas fa-play"></i> Démarrer tout</button>
+                    <button class="btn-ghost" id="stopAllBtn"><i class="fas fa-stop"></i> Arrêter tout</button>
+                </div>
+            </div>
+
+            <!-- ===== DASHBOARD SHORTCUTS + STATUT ===== -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-grip"></i> Dashboard</span>
+                    <span class="badge-soft"><i class="fas fa-ellipsis"></i></span>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: 4px;">
+                    <span class="badge-soft" style="padding: 10px 20px; background: #f0f4fe; color: #1e2b3c; border-radius: var(--radius-md); font-weight: 500; cursor: default;"><i class="fas fa-chart-line" style="margin-right: 8px;"></i>Graphiques 2D</span>
+                    <span class="badge-soft" style="padding: 10px 20px; background: #f0f4fe; color: #1e2b3c; border-radius: var(--radius-md); font-weight: 500; cursor: default;"><i class="fas fa-list-ul" style="margin-right: 8px;"></i>Journal des Logs</span>
+                    <span class="badge-soft" style="padding: 10px 20px; background: #f0f4fe; color: #1e2b3c; border-radius: var(--radius-md); font-weight: 500; cursor: default;"><i class="fas fa-sliders" style="margin-right: 8px;"></i>Configuration</span>
+                </div>
+                <div style="margin-top: var(--space-5); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+                    <div class="offline-item"><i class="fas fa-circle-exclamation" style="color: #b34a2c;"></i> ZONE D · hors ligne</div>
+                    <div class="offline-item"><i class="fas fa-circle-exclamation" style="color: #b34a2c;"></i> ZONE E · hors ligne</div>
+                    <div class="offline-item"><i class="fas fa-circle-exclamation" style="color: #b34a2c;"></i> ZONE C · hors ligne</div>
+                    <div class="offline-item"><i class="fas fa-circle-exclamation" style="color: #b34a2c;"></i> ZONE D · hors ligne</div>
+                    <div class="offline-item"><i class="fas fa-circle-exclamation" style="color: #b34a2c;"></i> ZONE E · hors ligne</div>
+                </div>
+                <div style="margin-top: var(--space-4); background: #f3f6fb; padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-wifi" style="color: #2d7a6e;"></i> 3 capteurs hors ligne · appuyez sur "Démarrer"
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ROW : PARAMÈTRES + ÉTAT ===== -->
+        <div class="row-cards">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-microchip"></i> Paramètres actuels</span>
+                    <span class="badge-soft"><i class="fas fa-pen"></i> modifier</span>
+                </div>
+                <div class="settings-grid">
+                    <div class="setting-item"><span class="setting-label">Seuil irrigation</span><span class="setting-value">30.0 %</span></div>
+                    <div class="setting-item"><span class="setting-label">Fréquence capteurs</span><span class="setting-value">2.0 s</span></div>
+                    <div class="setting-item"><span class="setting-label">Alerte sonore</span><span class="setting-value"><span class="toggle-indicator active" id="soundToggle"></span> Activée</span></div>
+                    <div class="setting-item"><span class="setting-label">Cours</span><span class="setting-value"><i class="fas fa-graduation-cap"></i> ICT308 - UY1</span></div>
+                </div>
+                <div class="cours-badge"><i class="fas fa-arrow-right"></i> Dernière synchro : 08:48</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-signal"></i> État des capteurs</span>
+                    <span class="badge-soft" id="alertCountBadge">2 en alerte</span>
+                </div>
+                <div class="offline-grid" id="sensorStatusGrid">
+                    <div class="offline-item" data-zone="A"><i class="fas fa-circle" style="color: #2d7a6e; font-size: 10px;"></i> <span>ZONE A</span> <small>33.0°</small></div>
+                    <div class="offline-item" data-zone="B"><i class="fas fa-circle" style="color: #2d7a6e; font-size: 10px;"></i> <span>ZONE B</span> <small>16.8°</small></div>
+                    <div class="offline-item" data-zone="C"><i class="fas fa-circle" style="color: #2d7a6e; font-size: 10px;"></i> <span>ZONE C</span> <small>21.8°</small></div>
+                    <div class="offline-item" data-zone="D"><i class="fas fa-circle" style="color: #b34a2c; font-size: 10px;"></i> <span>ZONE D</span> <small>24.2°</small></div>
+                    <div class="offline-item" data-zone="E"><i class="fas fa-circle" style="color: #2d7a6e; font-size: 10px;"></i> <span>ZONE E</span> <small>27.2°</small></div>
+                </div>
+                <div style="margin-top: var(--space-4); background: #f3f6fb; padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-info-circle"></i> <span id="sensorStatusText">3 capteurs hors ligne</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DOUBLE TABLE ===== -->
+        <div class="double-table">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-table"></i> Aperçu instantané</span>
+                    <span class="badge-soft">Zones A–E</span>
+                </div>
+                <div class="zone-row" style="font-weight: 500; color: var(--color-text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--color-border);">
+                    <span>Zone</span><span>Temp</span><span>Humidité</span><span>Alerte</span><span>État</span><span></span>
+                </div>
+                <div class="zone-row"><span class="zone-name">ZONE A</span><span class="zone-temp">33.0°</span><span class="zone-humidity">18.8%</span><span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE B</span><span class="zone-temp">16.8°</span><span class="zone-humidity">72.0%</span><span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE C</span><span class="zone-temp">21.8°</span><span class="zone-humidity">73.8%</span><span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE D</span><span class="zone-temp">24.2°</span><span class="zone-humidity">24.7%</span><span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span><span><span class="sensor-status-dot offline"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE E</span><span class="zone-temp">27.2°</span><span class="zone-humidity">35.4%</span><span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-table"></i> Aperçu instantané</span>
+                    <span class="badge-soft">Alertes uniquement</span>
+                </div>
+                <div class="zone-row" style="font-weight: 500; color: var(--color-text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--color-border);">
+                    <span>Zone</span><span>Temp</span><span>Humidité</span><span>Alerte</span><span>État</span><span></span>
+                </div>
+                <div class="zone-row"><span class="zone-name">ZONE A</span><span class="zone-temp">33.0°</span><span class="zone-humidity">18.8%</span><span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE D</span><span class="zone-temp">24.2°</span><span class="zone-humidity">24.7%</span><span class="badge-status badge-alert"><i class="fas fa-triangle-exclamation"></i> AL</span><span><span class="sensor-status-dot offline"></span></span><span></span></div>
+                <div class="zone-row"><span class="zone-name">ZONE E</span><span class="zone-temp">27.2°</span><span class="zone-humidity">35.4%</span><span class="badge-status badge-normal"><i class="fas fa-check-circle"></i> Normal</span><span><span class="sensor-status-dot online"></span></span><span></span></div>
+                <div style="margin-top: var(--space-4); background: #fafcff; padding: 14px 12px; border-radius: var(--radius-md); border: 1px dashed #d0d8e3; color: var(--color-text-secondary); font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-info-circle"></i> <span id="alertSummary">2 alertes actives · seuil d'irrigation dépassé</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-message" id="toast"><i class="fas fa-check-circle"></i> <span id="toastText">Action effectuée</span></div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // État des capteurs : true = online, false = offline
+            const sensorState = {
+                A: true,
+                B: true,
+                C: true,
+                D: false,
+                E: true
+            };
+
+            // DOM refs
+            const dots = {
+                A: document.getElementById('dot-A'),
+                B: document.getElementById('dot-B'),
+                C: document.getElementById('dot-C'),
+                D: document.getElementById('dot-D'),
+                E: document.getElementById('dot-E')
+            };
+
+            const zoneRows = document.querySelectorAll('.zone-row[data-zone]');
+            const offlineItems = document.querySelectorAll('.offline-item[data-zone]');
+            const sensorStatusText = document.getElementById('sensorStatusText');
+            const alertCountBadge = document.getElementById('alertCountBadge');
+            const alertSummary = document.getElementById('alertSummary');
+
+            // Toast
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toastText');
+            let toastTimeout = null;
+
+            function showToast(message, type = 'success') {
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                toast.querySelector('i').className = `fas ${icon}`;
+                toastText.textContent = message;
+                toast.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+            }
+
+            // Mettre à jour l'UI en fonction de sensorState
+            function updateUI() {
+                // Mettre à jour les points dans la table principale
+                for (const [zone, isOnline] of Object.entries(sensorState)) {
+                    const dot = dots[zone];
+                    if (dot) {
+                        dot.className = 'sensor-status-dot ' + (isOnline ? 'online' : 'offline');
+                    }
+                }
+
+                // Mettre à jour les items offline (carrés de statut)
+                offlineItems.forEach(item => {
+                    const zone = item.dataset.zone;
+                    const isOnline = sensorState[zone];
+                    const icon = item.querySelector('i');
+                    if (icon) {
+                        icon.style.color = isOnline ? '#2d7a6e' : '#b34a2c';
+                    }
+                    // petit changement de style
+                    if (isOnline) {
+                        item.style.borderLeft = '3px solid #2d7a6e';
+                    } else {
+                        item.style.borderLeft = '3px solid #b34a2c';
+                    }
+                });
+
+                // Compter les hors ligne
+                const offlineCount = Object.values(sensorState).filter(v => v === false).length;
+                const total = Object.keys(sensorState).length;
+                const onlineCount = total - offlineCount;
+
+                sensorStatusText.textContent = offlineCount === 0 ?
+                    'Tous les capteurs sont en ligne' :
+                    `${offlineCount} capteur${offlineCount > 1 ? 's' : ''} hors ligne`;
+
+                // Badge alert
+                const alertZones = ['A', 'D']; // simulé
+                const alertCount = alertZones.filter(z => sensorState[z] === true).length;
+                alertCountBadge.textContent = `${alertCount} en alerte`;
+                alertSummary.textContent = `${alertCount} alerte${alertCount > 1 ? 's' : ''} active${alertCount > 1 ? 's' : ''} · seuil d'irrigation dépassé`;
+
+                // Mettre à jour les badges dans les lignes (pour l'exemple on garde)
+            }
+
+            // Action sur un capteur
+            function sensorAction(zone, action) {
+                if (action === 'start') {
+                    if (sensorState[zone] === true) {
+                        showToast(`Capteur ${zone} déjà en ligne`, 'info');
+                        return;
+                    }
+                    sensorState[zone] = true;
+                    showToast(`Capteur ${zone} démarré`, 'success');
+                } else if (action === 'stop') {
+                    if (sensorState[zone] === false) {
+                        showToast(`Capteur ${zone} déjà arrêté`, 'info');
+                        return;
+                    }
+                    sensorState[zone] = false;
+                    showToast(`Capteur ${zone} arrêté`, 'warning');
+                }
+                updateUI();
+            }
+
+            // Gestion des clics sur les boutons start/stop
+            document.querySelectorAll('.btn-sensor').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const zone = this.dataset.zone;
+                    const action = this.dataset.action;
+                    if (zone && action) {
+                        // Animation de feedback
+                        this.style.transform = 'scale(0.92)';
+                        setTimeout(() => { this.style.transform = ''; }, 150);
+                        sensorAction(zone, action);
+                    }
+                });
+            });
+
+            // Démarrer tout
+            document.getElementById('startAllBtn').addEventListener('click', function() {
+                let anyChanged = false;
+                for (const zone of Object.keys(sensorState)) {
+                    if (sensorState[zone] === false) {
+                        sensorState[zone] = true;
+                        anyChanged = true;
+                    }
+                }
+                updateUI();
+                showToast(anyChanged ? 'Tous les capteurs démarrés' : 'Tous les capteurs sont déjà en ligne', anyChanged ? 'success' : 'info');
+            });
+
+            // Arrêter tout
+            document.getElementById('stopAllBtn').addEventListener('click', function() {
+                let anyChanged = false;
+                for (const zone of Object.keys(sensorState)) {
+                    if (sensorState[zone] === true) {
+                        sensorState[zone] = false;
+                        anyChanged = true;
+                    }
+                }
+                updateUI();
+                showToast(anyChanged ? 'Tous les capteurs arrêtés' : 'Tous les capteurs sont déjà arrêtés', anyChanged ? 'warning' : 'info');
+            });
+
+            // Toggle sonore (simulé)
+            const soundToggle = document.getElementById('soundToggle');
+            let soundOn = true;
+            soundToggle.addEventListener('click', function() {
+                soundOn = !soundOn;
+                this.className = 'toggle-indicator ' + (soundOn ? 'active' : 'inactive');
+                const parent = this.closest('.setting-item').querySelector('.setting-value');
+                const textNode = parent.childNodes[parent.childNodes.length - 1];
+                if (textNode) textNode.textContent = soundOn ? ' Activée' : ' Désactivée';
+                showToast(soundOn ? 'Alerte sonore activée' : 'Alerte sonore désactivée', 'info');
+            });
+
+            // Initialisation
+            updateUI();
+
+            // Simuler une alerte supplémentaire : au bout de 3s, la zone D repasse en ligne (pour l'exemple)
+            // Mais on va plutôt laisser l'utilisateur interagir.
+            // Ajout d'un effet sur les lignes : au survol, afficher un tooltip
+            zoneRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    const zone = this.dataset.zone;
+                    if (zone) {
+                        const status = sensorState[zone] ? 'en ligne' : 'hors ligne';
+                        this.style.cursor = 'default';
+                    }
+                });
+            });
+
+        })();
+    </script>
+</body>
+</html>
