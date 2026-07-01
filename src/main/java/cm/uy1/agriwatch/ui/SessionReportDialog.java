@@ -142,11 +142,10 @@ public class SessionReportDialog extends JDialog {
         btnExport.setFocusPainted(false);
         btnExport.setMargin(new Insets(8, 16, 8, 16));
         btnExport.addActionListener(e -> {
-            persistance.exporterCSV(historique);
             JOptionPane.showMessageDialog(this,
-                    "Rapport exporté avec succès dans le fichier :\n[data/rapport_alertes.csv]",
-                    "Exportation Réussie",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    "L'exportation en CSV a été désactivée.",
+                    "Exportation Désactivée",
+                    JOptionPane.WARNING_MESSAGE);
         });
 
         JButton btnFermer = new JButton("Fermer");

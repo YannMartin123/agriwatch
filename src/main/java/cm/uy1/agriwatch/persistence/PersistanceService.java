@@ -59,31 +59,7 @@ public class PersistanceService {
      * Exporte une liste de mesures dans un fichier CSV (format : Zone,Température,Humidité,Timestamp,Statut).
      */
     public void exporterCSV(List<MesureMeteo> mesures) {
-        assurerDossierExiste("data");
-        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(CSV_FILE_PATH), StandardCharsets.UTF_8))) {
-            // En-têtes
-            writer.println("Zone,Temperature,Humidite,Timestamp,Statut");
-
-            // Données
-            List<MesureMeteo> copie;
-            synchronized (mesures) {
-                copie = new ArrayList<>(mesures);
-            }
-
-            for (MesureMeteo m : copie) {
-                String statut = m.getHumidite() < 30.0 ? "ALERTE" : "Normal";
-                String dateStr = m.getTimestamp().format(DATE_FORMATTER);
-                writer.printf("%s,%.1f,%.1f,%s,%s%n",
-                        m.getZone().name(),
-                        m.getTemperature(),
-                        m.getHumidite(),
-                        dateStr,
-                        statut);
-            }
-            System.out.println("Export CSV réussi : " + CSV_FILE_PATH);
-        } catch (IOException e) {
-            System.err.println("Erreur lors de l'export CSV : " + e.getMessage());
-        }
+        System.out.println("Export CSV désactivé.");
     }
 
     private void assurerDossierExiste(String path) {

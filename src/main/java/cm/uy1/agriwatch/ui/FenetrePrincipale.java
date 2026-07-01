@@ -106,8 +106,8 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
         this.capteurManager = capteurManager;
         this.persistance = persistance;
 
-        // Charger l'historique enregistré
-        List<MesureMeteo> histCharge = persistance.charger();
+        // L'historique n'est plus chargé automatiquement au démarrage pour commencer à vide
+        List<MesureMeteo> histCharge = new ArrayList<>();
         centrale.chargerHistorique(histCharge);
 
         this.summaryTableModel = new MeteoTableModel();
@@ -900,11 +900,10 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
         btnExport.setForeground(Color.WHITE);
         btnExport.setFocusPainted(false);
         btnExport.addActionListener(e -> {
-            persistance.exporterCSV(centrale.getHistorique());
             JOptionPane.showMessageDialog(this,
-                    "Rapport exporté avec succès dans le fichier :\n[data/rapport_alertes.csv]",
-                    "Exportation Réussie",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    "L'exportation en CSV a été désactivée.",
+                    "Exportation Désactivée",
+                    JOptionPane.WARNING_MESSAGE);
         });
 
         toolbar.add(lblFilterZone);
@@ -1349,7 +1348,7 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
     }
 
     private void sauvegarderEtFermer() {
-        persistance.sauvegarder(centrale.getHistorique());
+        // L'historique n'est plus sauvegardé automatiquement à la fermeture
         capteurManager.arreter();
         System.out.println("AgriWatch — Fermeture.");
         System.exit(0);
