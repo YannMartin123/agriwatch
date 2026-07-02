@@ -1,11 +1,13 @@
 package cm.uy1.agriwatch;
 
 import cm.uy1.agriwatch.core.CentraleMeteo;
+import cm.uy1.agriwatch.core.MesureMeteo;
 import cm.uy1.agriwatch.persistence.PersistanceService;
 import cm.uy1.agriwatch.threading.CapteurManager;
 import cm.uy1.agriwatch.ui.FenetrePrincipale;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Point d'entrée de l'application AgriWatch.
@@ -24,6 +26,15 @@ public class Main {
         CentraleMeteo centrale = new CentraleMeteo();
         CapteurManager capteurManager = new CapteurManager();
         PersistanceService persistance = new PersistanceService();
+
+        List<MesureMeteo> ancienHistorique = persistance.charger();
+
+        if(!ancienHistorique.isEmpty()){
+            for(MesureMeteo m : ancienHistorique) {
+                centrale.onMesureRecue(m.getZone() , m.getTemperature() , m.getTemperature());
+            }
+            System.out.println("AgriWatch — " + ancienHistorique.size() + " anciennes mesures restaurées.");
+        }
 
         // Afficher la fenêtre dans l'EDT
         SwingUtilities.invokeLater(() -> {

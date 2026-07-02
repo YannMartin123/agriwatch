@@ -6,11 +6,9 @@ import java.util.List;
 
 public class CentraleMeteo implements MeteoListener {
 
-    private final List<MesureMeteo> historique =
-        Collections.synchronizedList(new ArrayList<>());
+    private final List<MesureMeteo> historique = Collections.synchronizedList(new ArrayList<>());
 
-    private final List<MeteoListener> listeners =
-        Collections.synchronizedList(new ArrayList<>());
+    private final List<MeteoListener> listeners = Collections.synchronizedList(new ArrayList<>());
 
     public void abonner(MeteoListener listener) {
         listeners.add(listener);

@@ -68,9 +68,7 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
 
     // --- Constructeur ---
 
-    public FenetrePrincipale(CentraleMeteo centrale,
-                             CapteurManager capteurManager,
-                             PersistanceService persistance) {
+    public FenetrePrincipale(CentraleMeteo centrale, CapteurManager capteurManager, PersistanceService persistance) {
         this.centrale       = centrale;
         this.capteurManager = capteurManager;
         this.persistance    = persistance;
@@ -78,7 +76,8 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
 
         // === Configuration de la JFrame ===
         setTitle(TITRE_APP);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(1300, 800);
         setMinimumSize(new Dimension(1000, 650));
         setLocationRelativeTo(null);
@@ -115,6 +114,24 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
 
         // S'abonner à la centrale pour recevoir les mesures
         centrale.abonner(this);
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                // 1. Message de courtoisie dans la console
+                System.out.println("AgriWatch — Fermeture de l'application...");
+
+                // 2. On éteint d'abord les capteurs pour figer les threads
+                arreterCapteurs();
+
+                // 3. On sauvegarde tout l'historique de la centrale sur le disque dur
+                persistance.sauvegarder(centrale.getHistorique());
+
+                // 4. On détruit la fenêtre et on quitte proprement le processus
+                dispose();
+                System.exit(0);
+            }
+        });
     }
 
     // --- Construction des panneaux ---
@@ -289,16 +306,26 @@ public class FenetrePrincipale extends JFrame implements MeteoListener {
             majEtatBoutons();
             // Désactiver l'alerte clignotante si elle était active
             gererAlerte(false);
+            persistance.sauvegarder(centrale.getHistorique());
         }
     }
 
     private void exporterCSV() {
-        // TODO Équipe 2 : quand PersistanceService sera implémenté
-        // persistance.exporterCSV(centrale.getHistorique());
-        JOptionPane.showMessageDialog(this,
-                "Export CSV — fonctionnalité à implémenter (Équipe 2)",
-                "Export CSV",
-                JOptionPane.INFORMATION_MESSAGE);
+        /// APPEL CORRIGÉ (Équipe 2) : On passe l'historique complet de la centrale au service
+        java.util.List<MesureMeteo> historique = centrale.getHistorique();
+
+        if (historique.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "L'historique est vide. Aucune donnée à exporter.",
+                    "Export CSV",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            persistance.exporterCSV(historique);
+            JOptionPane.showMessageDialog(this,
+                    "Exportation réussie dans 'data/rapport_alertes.csv' !",
+                    "Export CSV",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void majEtatBoutons() {
